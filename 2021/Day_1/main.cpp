@@ -1,9 +1,10 @@
 #include <iostream>
 #include <fstream>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
-void depthIncreases(std::ifstream & file){
+std::vector<int> depthIncreases(std::ifstream & file){
   int count = 0;
   std::string depth;
   std::vector<int> totalDepths;
@@ -18,11 +19,26 @@ void depthIncreases(std::ifstream & file){
     }
   }
   std::cout << "Increases: " << count << std::endl;
+
+  return totalDepths;
 }
 
 
-void threeMeasure(std::string file){
+void threeMeasure(std::vector<int> vec){
+  
+  int count = 0; 
+  std::vector<int> measures = vec;
+ 
+  for (int i = 0; i < vec.size()-(vec.size()%3)-1; i++){
+    int paneOne = vec.at(i) + vec.at(i+1) + vec.at(i+2);
+    int paneTwo = vec.at(i+1) + vec.at(i+2) + vec.at(i+3);
+    if (paneOne < paneTwo){
+      count++;
+    }
+    std::cout << vec.at(i) << "\n";
+  }
 
+  std::cout << "Three measure increases: " << count << std::endl;
 }
 
 
@@ -34,7 +50,7 @@ int main(){
       exit(1);
   }
 
-  depthIncreases(submarine);
+  threeMeasure(depthIncreases(submarine));
 
   submarine.close(); 
 }
