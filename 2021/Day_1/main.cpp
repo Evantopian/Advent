@@ -49,7 +49,7 @@ int main(){
       std::cerr << "File cannot be opened for reading." << std::endl;
       exit(1);
   }
-
+  //checking if ssh key broke
   threeMeasure(depthIncreases(submarine));
 
   submarine.close(); 
