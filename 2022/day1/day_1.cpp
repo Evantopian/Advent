@@ -24,8 +24,9 @@ int main(){
 
     sum = 0;
     sort(k.begin(), k.end(), greater<int>());
-    
-    for (auto i = 0; i < 3; ++i)
+    cout << k[0] << endl;
+ 
+    for (size_t i = 0; i < 3; ++i)
         sum += k[i];
 
     cout << sum << endl;
