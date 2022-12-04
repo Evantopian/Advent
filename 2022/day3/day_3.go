@@ -5,48 +5,76 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 )
 
-func main() {
+var alpha = make(map[string]int)
 
+func sim(arr []string, size int) int {
+	sim_map := make(map[rune]int)
+	keys := ""
+
+	for i, item := range arr {
+		for _, ch := range item {
+			if sim_map[ch] == 0 {
+				keys += string(ch)
+			}
+			if sim_map[ch] == i {
+				sim_map[ch]++
+			}
+		}
+	}
+	for _, key := range keys {
+		found := true
+		for i := 0; i < size; i++ {
+			if !strings.ContainsRune(arr[i], key) {
+				found = false
+			}
+		}
+		if found == true {
+			//fmt.Println(alpha[string(key)])
+			return alpha[string(key)]
+		}
+	}
+
+	return 0
+}
+
+func main() {
 	file, err := os.Open("input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer file.Close()
 
-	lower := make(map[string]int)
-
 	for i := 0; i < 26; i++ {
-		lower[string(rune(i+97))] = 1 + i
-		lower[string(rune(i+65))] = 27 + i
-		//fmt.Println(string(rune(i+97)), lower[string(rune(i+97))])
+		alpha[string(rune(i+97))] = 1 + i
+		alpha[string(rune(i+65))] = 27 + i
 	}
 
 	scanner := bufio.NewScanner(file)
+	three_sack := make([]string, 3)
+	var p1, p2, rep = 0, 0, 0
 
-	k := 0
 	for scanner.Scan() {
-		ruck_sack := make(map[rune]int)
+		sack := make([]string, 2)
 
 		text := scanner.Text()
-		first := text[0 : len(text)/2]
-		second := text[len(text)/2:]
+		sack[0] = text[0 : len(text)/2]
+		sack[1] = text[len(text)/2:]
 
 		// 97 (lower)
-		for _, ch := range first {
-			ruck_sack[ch] = lower[string(ch)]
+		three_sack[rep] = text
+		rep++
+		p1 += sim(sack, 2)
+		if (rep)%3 == 0 {
+			p2 += sim(three_sack, 3)
+			three_sack = three_sack[:3]
+			rep = 0
+
 		}
 
-		for _, ch := range second {
-			if ruck_sack[ch] != 0 {
-				k += lower[string(ch)]
-				fmt.Print(" - : ", lower[string(ch)])
-				break
-			}
-		}
-		fmt.Println()
 	}
-	fmt.Println("k", k)
+	fmt.Printf("pt1: %d\npt2: %d", p1, p2)
 
 }
